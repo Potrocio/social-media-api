@@ -12,3 +12,79 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+model User {
+  id             Int            @id @default(autoincrement())
+  firstName      String         @map("first_name")
+  middleName     String         @map("middle_name")
+  lastName       String         @map("last_name")
+  email          String         @unique
+  password       String
+  profilePicture String         @map("profile_picture")
+  posts          Post[]
+  pictures       Picture[]
+  conversations  Conversation[]
+  friends        User[]         @relation("user_friends") //Each friend must be added to each user manually
+  friendOf       User[]         @relation("user_friends")
+
+  requestsSent     PendingRequest[] @relation("request_sender")
+  requestsReceived PendingRequest[] @relation("request_receiver")
+
+  //unused
+  messages Message[]
+
+  @@map("users")
+}
+
+model Post {
+  id        Int      @id @default(autoincrement())
+  content   String
+  createdAt DateTime @default(now()) @map("created_at")
+  user      User     @relation(fields: [createdBy], references: [id])
+  createdBy Int      @map("created_by")
+
+  @@map("posts")
+}
+
+model Picture {
+  id     Int    @id @default(autoincrement())
+  user   User   @relation(fields: [userId], references: [id])
+  userId Int
+  url    String
+
+  @@map("pictures")
+}
+
+model Conversation {
+  id       Int       @id @default(autoincrement())
+  messages Message[]
+  users    User[]
+
+  @@map("conversations")
+}
+
+model Message {
+  id             Int @id @default(autoincrement())
+  conversationId Int @map("conversation_id")
+  senderId       Int @map("sender_id")
+
+  conversation Conversation @relation(fields: [conversationId], references: [id])
+  sender       User         @relation(fields: [senderId], references: [id])
+
+  content   String
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@map("messages")
+}
+
+model PendingRequest {
+  id         Int @id @default(autoincrement())
+  senderId   Int @map("sender_id")
+  receiverId Int @map("receiver_id")
+
+  sender   User @relation("request_sender", fields: [senderId], references: [id])
+  receiver User @relation("request_receiver", fields: [receiverId], references: [id])
+
+  @@unique([senderId, receiverId])
+  @@map("pending_requests")
+}
