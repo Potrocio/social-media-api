@@ -114,6 +114,39 @@ function authenticateToken(req, res, next) {
     })
 }
 
+// async function fetchDashboardData(req, res) {
+//     try {
+
+//     } catch (error) {
+//         console.log("fetchDashboardData", error)
+//         res.status(503).json({
+//             message: "Internal server error"
+//         })
+//     }
+// }
+
+// async function fetchFriends(req, res) {
+//     try {
+
+//     } catch (error) {
+//         console.log("fetchFriends", error)
+//         res.status(503).json({
+//             message: "Internal server error"
+//         })
+//     }
+// }
+
+// async function fetchConversationPreviews(req, res) {
+//     try {
+
+//     } catch (error) {
+//         console.log("fetchConversationPreviews", error)
+//         res.status(503).json({
+//             message: "Internal server error"
+//         })
+//     }
+// }
+
 async function updateUserSettings(req, res) {
     try {
         const { firstName, lastName, email, password } = req.body;

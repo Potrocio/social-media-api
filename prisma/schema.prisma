@@ -16,11 +16,10 @@ datasource db {
 model User {
   id             Int            @id @default(autoincrement())
   firstName      String         @map("first_name")
-  middleName     String         @map("middle_name")
   lastName       String         @map("last_name")
   email          String         @unique
   password       String
-  profilePicture String         @map("profile_picture")
+  profilePicture String?        @map("profile_picture")
   posts          Post[]
   pictures       Picture[]
   conversations  Conversation[]
